@@ -34,8 +34,6 @@ func main() {
 		return
 	}
 	fmt.Println(string(b))
-
-	return
 }
 
 func overrideStructFinal(input interface{}, output interface{}) interface{} {
