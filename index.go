@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	typecasting "go-entities/internal/type_casting"
 	"reflect"
 )
 
@@ -10,12 +11,21 @@ type Test struct {
 	Name  string `json:"Name"`
 	Value int    `json:"Value"`
 	Test  string `json:"Test"`
+	Extra Extra
 }
 
 type Test2 struct {
 	Name  string `json:"Name"`
-	Value int    `json:"Value"`
+	Value int64  `json:"Value"`
 	Test  string `json:"Test"`
+	Extra Extra
+}
+
+type Extra struct {
+	test int
+}
+
+type Extra2 struct {
 }
 
 func main() {
@@ -23,6 +33,9 @@ func main() {
 		Name:  "Nitin",
 		Value: 5,
 		Test:  "fvfvfv",
+		Extra: Extra{
+			test: 4343,
+		},
 	}
 	output := overrideStructFinal(test, Test2{})
 	fmt.Println(output)
@@ -34,6 +47,14 @@ func main() {
 		return
 	}
 	fmt.Println(string(b))
+}
+
+var allowedInts = map[reflect.Kind]struct{}{
+	reflect.Int:   {},
+	reflect.Int8:  {},
+	reflect.Int16: {},
+	reflect.Int32: {},
+	reflect.Int64: {},
 }
 
 func overrideStructFinal(input interface{}, output interface{}) interface{} {
@@ -50,7 +71,23 @@ func overrideStructFinal(input interface{}, output interface{}) interface{} {
 		field := dummyOutput.Field(i)
 		value := inputValue.FieldByName(outputType.Field(i).Name)
 
-		field.Set(value)
+		// If the Field is not present in input then continue
+		if value.Kind() == reflect.Invalid {
+			continue
+		}
+
+		if field.Type() == value.Type() {
+			field.Set(value)
+			continue
+		}
+
+		if field.Type().Kind() == value.Type().Kind() {
+			// most probably they are structs
+			typecasting.CastSameKind(&field, &value)
+			continue
+		} else {
+			// check how to cast of different types if there is any possibility
+		}
 	}
 
 	return dummyOutput.Interface()
