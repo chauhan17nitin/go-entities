@@ -49,14 +49,6 @@ func main() {
 	fmt.Println(string(b))
 }
 
-var allowedInts = map[reflect.Kind]struct{}{
-	reflect.Int:   {},
-	reflect.Int8:  {},
-	reflect.Int16: {},
-	reflect.Int32: {},
-	reflect.Int64: {},
-}
-
 func overrideStructFinal(input interface{}, output interface{}) interface{} {
 	// if both of them are not of struct type then you need to panic
 	inputValue := reflect.ValueOf(input)
