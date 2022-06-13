@@ -32,7 +32,18 @@ func CastDifferentKind(field, value *reflect.Value) {
 	}
 
 	if _, ok := allowedInts[field.Type().Kind()]; ok {
+		intCasting(field, value)
+		return
+	}
 
+	if _, ok := allowedFloats[field.Type().Kind()]; ok {
+		floatCasting(field, value)
+		return
+	}
+
+	if _, ok := allowedUints[field.Type().Kind()]; ok {
+		uintCasting(field, value)
+		return
 	}
 
 }
