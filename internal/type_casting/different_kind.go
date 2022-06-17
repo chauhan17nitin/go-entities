@@ -46,6 +46,13 @@ func CastDifferentKind(field, value *reflect.Value) {
 		return
 	}
 
+	if field.Type().Kind() == reflect.Interface {
+		field.Set(*value)
+		return
+	}
+
+	// here i think we can panic because the person is
+	// trying to cast very different kind of fields all together
 }
 
 func intCasting(field, value *reflect.Value) {
