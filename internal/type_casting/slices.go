@@ -30,14 +30,17 @@ func CastSlices(field, value *reflect.Value) {
 		return
 	}
 
-	x := reflect.MakeSlice(field.Type(), value.Len(), value.Len())
+	var x reflect.Value
+	same := false
+
+	if field.Len() != value.Len() {
+		x = reflect.MakeSlice(field.Type(), value.Len(), value.Len())
+	} else {
+		x = *field
+		same = true
+	}
 
 	sliceType := x.Index(0).Type().Kind()
-
-	if sliceType == reflect.Struct {
-		// we will have a different strategy for this in future
-		return
-	}
 
 	if sliceType == reflect.Slice {
 		// in future we will do
@@ -57,6 +60,10 @@ func CastSlices(field, value *reflect.Value) {
 	if sliceType == reflect.Chan {
 		// te be handled in future
 		return
+	}
+
+	if sliceType == reflect.Struct {
+		CastStructSlices(&x, value)
 	}
 
 	if _, ok := allowedInts[sliceType]; ok {
@@ -79,7 +86,9 @@ func CastSlices(field, value *reflect.Value) {
 		CastInterfaceSlice(&x, value)
 	}
 
-	field.Set(x)
+	if !same {
+		field.Set(x)
+	}
 }
 
 func CastInterfaceSlice(field, value *reflect.Value) {
@@ -187,5 +196,24 @@ func CastStringSlices(field, value *reflect.Value) {
 		elemField := field.Index(i)
 
 		elemField.SetString(elemValue.String())
+	}
+}
+
+func CastStructSlices(field, value *reflect.Value) {
+	basicSliceValidations(field, value)
+
+	if field.Index(0).Type().Kind() != reflect.Struct {
+		panic("Can not cast non string type to string")
+	}
+
+	if value.Index(0).Type().Kind() != reflect.Struct {
+		panic("Can not cast non string type to string")
+	}
+
+	for i := 0; i < value.Len(); i++ {
+		elemValue := value.Index(i)
+		elemField := field.Index(i)
+
+		CastStructs(&elemField, &elemValue)
 	}
 }

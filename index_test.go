@@ -86,5 +86,46 @@ func Test_PresentStructNesting(t *testing.T) {
 	if castedOutput.NestingField.StringField != testInput.NestingField.StringField {
 		t.Errorf("Failed Casting Nested Struct String Field")
 	}
+}
 
+func Test_PresentSliceofStructs(t *testing.T) {
+	type input struct {
+		IntField    int
+		StringField string
+	}
+
+	type output struct {
+		IntField    int
+		StringField string
+	}
+
+	testInput := []input{
+		{
+			IntField:    1,
+			StringField: "test string",
+		},
+		{
+			IntField:    2,
+			StringField: "test string 2",
+		},
+	}
+
+	testOutput := output{}
+
+	outputValue := Present(testInput, testOutput)
+	castedOutput := outputValue.([]output)
+
+	if len(testInput) != len(castedOutput) {
+		t.Errorf("Unmacthed output and input length")
+	}
+
+	for i := 0; i < len(castedOutput); i++ {
+		if testInput[i].IntField != castedOutput[i].IntField {
+			t.Errorf("Failed Casting Array to Struct Int Field")
+		}
+
+		if testInput[i].StringField != castedOutput[i].StringField {
+			t.Errorf("Failed Casting Array to Struct String Field")
+		}
+	}
 }
