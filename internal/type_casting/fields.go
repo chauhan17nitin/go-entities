@@ -24,7 +24,6 @@ func CastField(field, value *reflect.Value) {
 
 	if field.Type().Kind() == reflect.Slice {
 		CastSlices(field, value)
-		// we need to find some other way for slice
 		return
 	}
 
