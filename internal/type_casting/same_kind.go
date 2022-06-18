@@ -4,9 +4,11 @@ import (
 	"reflect"
 )
 
-func CastSameKind(field, value *reflect.Value) {
+func CastField(field, value *reflect.Value) {
 	if field.Type().Kind() != value.Type().Kind() {
-		panic("false call to function")
+		CastDifferentKind(field, value)
+
+		return
 	}
 
 	if field.Type().Kind() == reflect.Struct {
@@ -28,11 +30,6 @@ func CastSameKind(field, value *reflect.Value) {
 
 	if field.Type().Kind() == reflect.Array {
 		// some other way for Array
-		return
-	}
-
-	if field.Type().Kind() == reflect.Interface {
-		// let's not go for interfaces for now not sure how it will go
 		return
 	}
 

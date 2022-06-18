@@ -80,8 +80,6 @@ func CastSlices(field, value *reflect.Value) {
 	}
 
 	field.Set(x)
-
-	return
 }
 
 func CastInterfaceSlice(field, value *reflect.Value) {
@@ -96,8 +94,6 @@ func CastInterfaceSlice(field, value *reflect.Value) {
 		elemField := field.Index(i)
 		elemField.Set(elemValue)
 	}
-
-	return
 }
 
 func CastIntSlices(field, value *reflect.Value) {
@@ -123,8 +119,6 @@ func CastIntSlices(field, value *reflect.Value) {
 
 		elemField.SetInt(elemValue.Int())
 	}
-
-	return
 }
 
 func CastUintSlices(field, value *reflect.Value) {
@@ -150,8 +144,6 @@ func CastUintSlices(field, value *reflect.Value) {
 
 		elemField.SetUint(elemValue.Uint())
 	}
-
-	return
 }
 
 func CastFloatSlices(field, value *reflect.Value) {
@@ -177,8 +169,6 @@ func CastFloatSlices(field, value *reflect.Value) {
 
 		elemField.SetFloat(elemValue.Float())
 	}
-
-	return
 }
 
 func CastStringSlices(field, value *reflect.Value) {
@@ -198,6 +188,4 @@ func CastStringSlices(field, value *reflect.Value) {
 
 		elemField.SetString(elemValue.String())
 	}
-
-	return
 }

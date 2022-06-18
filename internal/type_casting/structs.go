@@ -18,12 +18,6 @@ func CastStructs(field, value *reflect.Value) {
 			continue
 		}
 
-		if innerField.Type().Kind() == innerValue.Type().Kind() {
-			CastSameKind(&innerField, &innerValue)
-			continue
-		} else {
-			// check how to cast of different types if there is any possibility
-			CastDifferentKind(&innerField, &innerValue)
-		}
+		CastField(&innerField, &innerValue)
 	}
 }
