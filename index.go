@@ -57,23 +57,12 @@ func Present(input interface{}, output interface{}) interface{} {
 	// if both of them are not of struct type then you need to panic
 	inputValue := reflect.ValueOf(input)
 	dummyOutput := reflect.New(reflect.Indirect(reflect.ValueOf(output)).Type()).Elem()
-	outputType := reflect.ValueOf(output).Type()
 
 	if (inputValue.Type().Kind() != reflect.Struct) || dummyOutput.Kind() != reflect.Struct {
 		panic("Input and output both must be of struct types")
 	}
 
-	for i := 0; i < dummyOutput.NumField(); i++ {
-		field := dummyOutput.Field(i)
-		value := inputValue.FieldByName(outputType.Field(i).Name)
-
-		// If the Field is not present in input then continue
-		if value.Kind() == reflect.Invalid {
-			continue
-		}
-
-		typecasting.CastField(&field, &value)
-	}
+	typecasting.CastStructs(&dummyOutput, &inputValue)
 
 	return dummyOutput.Interface()
 }
