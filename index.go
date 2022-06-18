@@ -11,7 +11,10 @@ func Present(input interface{}, output interface{}) interface{} {
 	dummyOutput := reflect.New(reflect.Indirect(reflect.ValueOf(output)).Type()).Elem()
 
 	if (inputValue.Type().Kind() != reflect.Struct) || dummyOutput.Kind() != reflect.Struct {
-		panic("Input and output both must be of struct types")
+		if inputValue.Type().Kind() == reflect.Slice && dummyOutput.Kind() == reflect.Struct {
+			return typecasting.CastSliceofStructs(&dummyOutput, &inputValue)
+		}
+		panic("invalid input and output formats")
 	}
 
 	typecasting.CastStructs(&dummyOutput, &inputValue)
