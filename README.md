@@ -4,7 +4,7 @@ go-entities is a support to api responses structs. It sits on the the top of mod
 
 ## Examples
 
-```
+```go
 type Book struct {
     Id int64
     Title string
@@ -19,7 +19,7 @@ type BookEntity struct {
 
 Now you don't want to expose the Id field to the frontend, then you can just present your response with goentities
 
-```
+```go
 // let's suppose response is the data which you are getting from service layer and now you want to present it using your book entity
 response := Book{
     Id: 1,
