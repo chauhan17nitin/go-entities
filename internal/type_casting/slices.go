@@ -1,6 +1,8 @@
 package typecasting
 
-import "reflect"
+import (
+	"reflect"
+)
 
 func basicSliceValidations(field, value *reflect.Value) {
 	if (field.Type().Kind() != reflect.Slice) || (value.Type().Kind() != reflect.Slice) {
@@ -11,6 +13,91 @@ func basicSliceValidations(field, value *reflect.Value) {
 		panic("Slices lengths are unequal")
 	}
 
+}
+
+func CastSlices(field, value *reflect.Value) {
+	if (field.Type().Kind() != reflect.Slice) || (value.Type().Kind() != reflect.Slice) {
+		panic("Input and Output Type must be struct")
+	}
+
+	if field.Type() == value.Type() {
+		field.Set(*value)
+
+		return
+	}
+
+	if value.Len() <= 0 {
+		return
+	}
+
+	x := reflect.MakeSlice(field.Type(), value.Len(), value.Len())
+
+	sliceType := x.Index(0).Type().Kind()
+
+	if sliceType == reflect.Struct {
+		// we will have a different strategy for this in future
+		return
+	}
+
+	if sliceType == reflect.Slice {
+		// in future we will do
+		return
+	}
+
+	if sliceType == reflect.Array {
+		// in future to handle
+		return
+	}
+
+	if sliceType == reflect.Map {
+		// te be handled in future
+		return
+	}
+
+	if sliceType == reflect.Chan {
+		// te be handled in future
+		return
+	}
+
+	if _, ok := allowedInts[sliceType]; ok {
+		CastIntSlices(&x, value)
+	}
+
+	if _, ok := allowedUints[sliceType]; ok {
+		CastUintSlices(&x, value)
+	}
+
+	if _, ok := allowedFloats[sliceType]; ok {
+		CastFloatSlices(&x, value)
+	}
+
+	if sliceType == reflect.String {
+		CastStringSlices(&x, value)
+	}
+
+	if sliceType == reflect.Interface {
+		CastInterfaceSlice(&x, value)
+	}
+
+	field.Set(x)
+
+	return
+}
+
+func CastInterfaceSlice(field, value *reflect.Value) {
+	basicSliceValidations(field, value)
+
+	if field.Index(0).Type().Kind() != reflect.Interface {
+		panic("field type is not slice of interface")
+	}
+
+	for i := 0; i < value.Len(); i++ {
+		elemValue := value.Index(i)
+		elemField := field.Index(i)
+		elemField.Set(elemValue)
+	}
+
+	return
 }
 
 func CastIntSlices(field, value *reflect.Value) {

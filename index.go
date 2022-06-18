@@ -12,23 +12,23 @@ type Test struct {
 	Value int    `json:"Value"`
 	Test  string `json:"Test"`
 	Slice []int  `json:"SliceInt"`
-	// Extra Extra
+	Extra Extra
 }
 
 type Test2 struct {
-	Name  string  `json:"Name"`
-	Value int64   `json:"Value"`
-	Test  string  `json:"Test"`
-	Slice []int64 `json:"SliceInt"`
-	// Extra Extra2
+	Name  string        `json:"Name"`
+	Value interface{}   `json:"Value"`
+	Test  string        `json:"Test"`
+	Slice []interface{} `json:"SliceInt"`
+	Extra interface{}
 }
 
 type Extra struct {
-	test int
+	Test int
 }
 
 type Extra2 struct {
-	test int
+	Test int
 }
 
 func main() {
@@ -37,9 +37,9 @@ func main() {
 		Value: 5,
 		Test:  "fvfvfv",
 		Slice: []int{2, 3, 4},
-		// Extra: Extra{
-		// 	test: 4343,
-		// },
+		Extra: Extra{
+			Test: 4343,
+		},
 	}
 	output := overrideStructFinal(test, Test2{})
 	fmt.Println(output)
