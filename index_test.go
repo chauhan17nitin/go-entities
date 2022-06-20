@@ -13,10 +13,10 @@ func Test_PresentSimple(t *testing.T) {
 	}
 
 	type output struct {
-		IntField    int32
-		FloatField  float64
-		StringField string
-		UintField   uint64
+		IntField    int32   `entity:"IntField"`
+		FloatField  float64 `entity:"FloatField"`
+		StringField string  `entity:"StringField"`
+		UintField   uint64  `entity:"UintField"`
 	}
 
 	testInput := input{
@@ -59,12 +59,12 @@ func Test_PresentStructNesting(t *testing.T) {
 	}
 
 	type outputNesting struct {
-		IntField    int64
-		StringField string
+		IntField    int64  `entity:"IntField"`
+		StringField string `entity:"StringField"`
 	}
 
 	type output struct {
-		NestingField outputNesting
+		NestingField outputNesting `entity:"NestingField"`
 	}
 
 	testInput := input{
@@ -95,8 +95,8 @@ func Test_PresentSliceofStructs(t *testing.T) {
 	}
 
 	type output struct {
-		IntField    int
-		StringField string
+		IntField1    int    `entity:"IntField"`
+		StringField1 string `entity:"StringField"`
 	}
 
 	testInput := []input{
@@ -120,11 +120,11 @@ func Test_PresentSliceofStructs(t *testing.T) {
 	}
 
 	for i := 0; i < len(castedOutput); i++ {
-		if testInput[i].IntField != castedOutput[i].IntField {
+		if testInput[i].IntField != castedOutput[i].IntField1 {
 			t.Errorf("Failed Casting Array to Struct Int Field")
 		}
 
-		if testInput[i].StringField != castedOutput[i].StringField {
+		if testInput[i].StringField != castedOutput[i].StringField1 {
 			t.Errorf("Failed Casting Array to Struct String Field")
 		}
 	}

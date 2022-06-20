@@ -2,6 +2,7 @@ package typecasting
 
 import (
 	"reflect"
+	"strings"
 )
 
 func CastStructs(field, value *reflect.Value) {
@@ -13,7 +14,11 @@ func CastStructs(field, value *reflect.Value) {
 
 	for i := 0; i < field.NumField(); i++ {
 		innerField := field.Field(i)
-		innerValue := value.FieldByName(outputType.Field(i).Name)
+		key := strings.Split(outputType.Field(i).Tag.Get("entity"), ",")[0]
+		if key == "" {
+			continue
+		}
+		innerValue := value.FieldByName(key)
 
 		// If the Field is not present in input then continue
 		if innerValue.Kind() == reflect.Invalid {

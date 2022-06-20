@@ -14,9 +14,9 @@ func Test_CastStructs(t *testing.T) {
 	}
 
 	type output struct {
-		Field1 int32
-		Field2 float64
-		Field3 string
+		Field1 int32   `entity:"Field1"`
+		Field2 float64 `entity:"Field2"`
+		Field3 string  `entity:"Field3"`
 	}
 
 	testInput := input{
