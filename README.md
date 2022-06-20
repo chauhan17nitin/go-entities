@@ -12,8 +12,8 @@ type Book struct {
 }
 
 type BookEntity struct {
-    Title string
-    Author string
+    BookTitle string `entity:"Title"`
+    AuthorOfBook string `entity:"Author"`
 }
 ```
 
