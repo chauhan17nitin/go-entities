@@ -1,7 +1,6 @@
 package goentities
 
 import (
-	typecasting "go-entities/internal/type_casting"
 	"reflect"
 )
 
@@ -12,12 +11,12 @@ func Present(input interface{}, output interface{}) interface{} {
 
 	if (inputValue.Type().Kind() != reflect.Struct) || dummyOutput.Kind() != reflect.Struct {
 		if inputValue.Type().Kind() == reflect.Slice && dummyOutput.Kind() == reflect.Struct {
-			return typecasting.CastSliceofStructs(&dummyOutput, &inputValue)
+			return castSliceofStructs(&dummyOutput, &inputValue)
 		}
 		panic("invalid input and output formats")
 	}
 
-	typecasting.CastStructs(&dummyOutput, &inputValue)
+	castStructs(&dummyOutput, &inputValue)
 
 	return dummyOutput.Interface()
 }

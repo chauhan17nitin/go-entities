@@ -1,4 +1,4 @@
-package typecasting
+package goentities
 
 import (
 	"reflect"
@@ -25,9 +25,9 @@ var allowedUints = map[reflect.Kind]struct{}{
 	reflect.Uint64: {},
 }
 
-func CastDifferentKind(field, value *reflect.Value) {
+func castDifferentKind(field, value *reflect.Value) {
 	if field.Type().Kind() == value.Type().Kind() {
-		CastField(field, value)
+		castField(field, value)
 		return
 	}
 

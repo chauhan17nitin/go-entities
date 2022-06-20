@@ -1,4 +1,4 @@
-package typecasting
+package goentities
 
 import (
 	"reflect"
@@ -15,7 +15,7 @@ func basicSliceValidations(field, value *reflect.Value) {
 
 }
 
-func CastSlices(field, value *reflect.Value) {
+func castSlices(field, value *reflect.Value) {
 	if (field.Type().Kind() != reflect.Slice) || (value.Type().Kind() != reflect.Slice) {
 		panic("Input and Output Type must be struct")
 	}
@@ -63,7 +63,7 @@ func CastSlices(field, value *reflect.Value) {
 	}
 
 	if sliceType == reflect.Struct {
-		CastStructSlices(&x, value)
+		castStructSlices(&x, value)
 	}
 
 	if _, ok := allowedInts[sliceType]; ok {
@@ -71,15 +71,15 @@ func CastSlices(field, value *reflect.Value) {
 	}
 
 	if _, ok := allowedUints[sliceType]; ok {
-		CastUintSlices(&x, value)
+		castUintSlices(&x, value)
 	}
 
 	if _, ok := allowedFloats[sliceType]; ok {
-		CastFloatSlices(&x, value)
+		castFloatSlices(&x, value)
 	}
 
 	if sliceType == reflect.String {
-		CastStringSlices(&x, value)
+		castStringSlices(&x, value)
 	}
 
 	if sliceType == reflect.Interface {
@@ -130,7 +130,7 @@ func CastIntSlices(field, value *reflect.Value) {
 	}
 }
 
-func CastUintSlices(field, value *reflect.Value) {
+func castUintSlices(field, value *reflect.Value) {
 	basicSliceValidations(field, value)
 
 	if _, ok := allowedFloats[field.Index(0).Type().Kind()]; !ok {
@@ -155,7 +155,7 @@ func CastUintSlices(field, value *reflect.Value) {
 	}
 }
 
-func CastFloatSlices(field, value *reflect.Value) {
+func castFloatSlices(field, value *reflect.Value) {
 	basicSliceValidations(field, value)
 
 	if _, ok := allowedFloats[field.Index(0).Type().Kind()]; !ok {
@@ -180,7 +180,7 @@ func CastFloatSlices(field, value *reflect.Value) {
 	}
 }
 
-func CastStringSlices(field, value *reflect.Value) {
+func castStringSlices(field, value *reflect.Value) {
 	basicSliceValidations(field, value)
 
 	if field.Index(0).Type().Kind() != reflect.String {
@@ -199,7 +199,7 @@ func CastStringSlices(field, value *reflect.Value) {
 	}
 }
 
-func CastStructSlices(field, value *reflect.Value) {
+func castStructSlices(field, value *reflect.Value) {
 	basicSliceValidations(field, value)
 
 	if field.Index(0).Type().Kind() != reflect.Struct {
@@ -214,6 +214,6 @@ func CastStructSlices(field, value *reflect.Value) {
 		elemValue := value.Index(i)
 		elemField := field.Index(i)
 
-		CastStructs(&elemField, &elemValue)
+		castStructs(&elemField, &elemValue)
 	}
 }

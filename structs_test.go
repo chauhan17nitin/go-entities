@@ -1,4 +1,4 @@
-package typecasting
+package goentities
 
 import (
 	"reflect"
@@ -30,7 +30,7 @@ func Test_CastStructs(t *testing.T) {
 	inputReflect := reflect.ValueOf(testInput)
 	dummyOutput := reflect.New(reflect.Indirect(reflect.ValueOf(testOutput)).Type()).Elem()
 
-	CastStructs(&dummyOutput, &inputReflect)
+	castStructs(&dummyOutput, &inputReflect)
 
 	finalOutput := dummyOutput.Interface().(output)
 

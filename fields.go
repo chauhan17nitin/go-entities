@@ -1,12 +1,12 @@
-package typecasting
+package goentities
 
 import (
 	"reflect"
 )
 
-func CastField(field, value *reflect.Value) {
+func castField(field, value *reflect.Value) {
 	if field.Type().Kind() != value.Type().Kind() {
-		CastDifferentKind(field, value)
+		castDifferentKind(field, value)
 
 		return
 	}
@@ -18,12 +18,12 @@ func CastField(field, value *reflect.Value) {
 
 			return
 		}
-		CastStructs(field, value)
+		castStructs(field, value)
 		return
 	}
 
 	if field.Type().Kind() == reflect.Slice {
-		CastSlices(field, value)
+		castSlices(field, value)
 		return
 	}
 

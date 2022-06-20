@@ -1,4 +1,4 @@
-package typecasting
+package goentities
 
 import (
 	"reflect"

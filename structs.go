@@ -1,11 +1,11 @@
-package typecasting
+package goentities
 
 import (
 	"reflect"
 	"strings"
 )
 
-func CastStructs(field, value *reflect.Value) {
+func castStructs(field, value *reflect.Value) {
 	if (field.Type().Kind() != reflect.Struct) || (value.Type().Kind() != reflect.Struct) {
 		panic("Input and Output Type must be struct")
 	}
@@ -25,11 +25,11 @@ func CastStructs(field, value *reflect.Value) {
 			continue
 		}
 
-		CastField(&innerField, &innerValue)
+		castField(&innerField, &innerValue)
 	}
 }
 
-func CastSliceofStructs(field, value *reflect.Value) interface{} {
+func castSliceofStructs(field, value *reflect.Value) interface{} {
 	if field.Type().Kind() != reflect.Struct || value.Type().Kind() != reflect.Slice {
 		panic("Unsupported Input and output types")
 	}
@@ -37,8 +37,7 @@ func CastSliceofStructs(field, value *reflect.Value) interface{} {
 	outputType := reflect.SliceOf(field.Type())
 	output := reflect.MakeSlice(outputType, value.Len(), value.Len())
 
-	// fmt.Println(output)
-	CastSlices(&output, value)
+	castSlices(&output, value)
 
 	return output.Interface()
 }

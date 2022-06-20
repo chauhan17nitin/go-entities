@@ -1,4 +1,4 @@
-package typecasting_test
+package goentities
 
 import "testing"
 
