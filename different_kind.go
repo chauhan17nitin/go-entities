@@ -26,6 +26,17 @@ var allowedUints = map[reflect.Kind]struct{}{
 }
 
 func castDifferentKind(field, value *reflect.Value) {
+
+	if field.Type().Kind() == reflect.Ptr {
+		pointerFieldCasting(field, value)
+		return
+	}
+
+	if value.Type().Kind() == reflect.Ptr {
+		pointerValueCasting(field, value)
+		return
+	}
+
 	if field.Type().Kind() == value.Type().Kind() {
 		castField(field, value)
 		return

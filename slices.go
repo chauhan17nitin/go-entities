@@ -17,7 +17,7 @@ func basicSliceValidations(field, value *reflect.Value) {
 
 func castSlices(field, value *reflect.Value) {
 	if (field.Type().Kind() != reflect.Slice) || (value.Type().Kind() != reflect.Slice) {
-		panic("Input and Output Type must be struct")
+		panic("Input and Output Type must be slice")
 	}
 
 	if field.Type() == value.Type() {

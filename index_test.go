@@ -48,6 +48,122 @@ func Test_PresentSimple(t *testing.T) {
 	}
 }
 
+func Test_PresentPointer(t *testing.T) {
+	type input struct {
+		IntField    int
+		FloatField  *float32
+		StringField *string
+		UintField   *uint
+		IntSlices   *[]int
+	}
+
+	type output struct {
+		IntField    int32   `entity:"IntField"`
+		FloatField  float64 `entity:"FloatField"`
+		StringField string  `entity:"StringField"`
+		UintField   uint64  `entity:"UintField"`
+		IntSlices   []int64
+	}
+
+	floatValue := float32(5.5)
+	stringValue := "this is a test string"
+	uintField := uint(5)
+	inputSlices := []int{2, 3, 4, 5}
+
+	testInput := input{
+		IntField:    -5,
+		FloatField:  &floatValue,
+		StringField: &stringValue,
+		UintField:   &uintField,
+		IntSlices:   &inputSlices,
+	}
+
+	testOutput := output{}
+
+	outputValue := Present(testInput, testOutput)
+	castedOutput := outputValue.(output)
+
+	if castedOutput.IntField != int32(testInput.IntField) {
+		t.Errorf("Failed in casting int field")
+	}
+
+	if castedOutput.FloatField != float64(*testInput.FloatField) {
+		t.Errorf("Failed in Float casting")
+	}
+
+	if castedOutput.StringField != *testInput.StringField {
+		t.Errorf("Failed in String casting")
+	}
+
+	if castedOutput.UintField != uint64(*testInput.UintField) {
+		t.Errorf("Failed in UInt casting")
+	}
+
+	for i := 0; i < len(castedOutput.IntSlices); i++ {
+		if castedOutput.IntSlices[i] != int64((*testInput.IntSlices)[i]) {
+			t.Errorf("failed in int slice casting")
+		}
+	}
+}
+
+func Test_PresentPointerStruct(t *testing.T) {
+	type input struct {
+		IntField    int
+		FloatField  *float32
+		StringField *string
+		UintField   *uint
+		IntSlices   *[]int
+	}
+
+	type output struct {
+		IntField    int32   `entity:"IntField"`
+		FloatField  float64 `entity:"FloatField"`
+		StringField string  `entity:"StringField"`
+		UintField   uint64  `entity:"UintField"`
+		IntSlices   []int64
+	}
+
+	floatValue := float32(5.5)
+	stringValue := "this is a test string"
+	uintField := uint(5)
+	inputSlices := []int{2, 3, 4, 5}
+
+	testInput := input{
+		IntField:    -5,
+		FloatField:  &floatValue,
+		StringField: &stringValue,
+		UintField:   &uintField,
+		IntSlices:   &inputSlices,
+	}
+
+	testOutput := output{}
+
+	outputValue := Present(&testInput, testOutput)
+	castedOutput := outputValue.(output)
+
+	if castedOutput.IntField != int32(testInput.IntField) {
+		t.Errorf("Failed in casting int field")
+	}
+
+	if castedOutput.FloatField != float64(*testInput.FloatField) {
+		t.Errorf("Failed in Float casting")
+	}
+
+	if castedOutput.StringField != *testInput.StringField {
+		t.Errorf("Failed in String casting")
+	}
+
+	if castedOutput.UintField != uint64(*testInput.UintField) {
+		t.Errorf("Failed in UInt casting")
+	}
+
+	for i := 0; i < len(castedOutput.IntSlices); i++ {
+		if castedOutput.IntSlices[i] != int64((*testInput.IntSlices)[i]) {
+			t.Errorf("failed in int slice casting")
+		}
+	}
+}
+
 func Test_PresentStructNesting(t *testing.T) {
 	type inputNesting struct {
 		IntField    int
@@ -55,7 +171,7 @@ func Test_PresentStructNesting(t *testing.T) {
 	}
 
 	type input struct {
-		NestingField inputNesting
+		NestingField *inputNesting
 	}
 
 	type outputNesting struct {
@@ -68,7 +184,7 @@ func Test_PresentStructNesting(t *testing.T) {
 	}
 
 	testInput := input{
-		inputNesting{
+		&inputNesting{
 			IntField:    10,
 			StringField: "test string",
 		},
@@ -90,7 +206,7 @@ func Test_PresentStructNesting(t *testing.T) {
 
 func Test_PresentSliceofStructs(t *testing.T) {
 	type input struct {
-		IntField    int
+		IntField    *int
 		StringField string
 	}
 
@@ -99,13 +215,16 @@ func Test_PresentSliceofStructs(t *testing.T) {
 		StringField1 string `entity:"StringField"`
 	}
 
+	intValue1 := 1
+	intValue2 := 2
+
 	testInput := []input{
 		{
-			IntField:    1,
+			IntField:    &intValue1,
 			StringField: "test string",
 		},
 		{
-			IntField:    2,
+			IntField:    &intValue2,
 			StringField: "test string 2",
 		},
 	}
@@ -120,7 +239,7 @@ func Test_PresentSliceofStructs(t *testing.T) {
 	}
 
 	for i := 0; i < len(castedOutput); i++ {
-		if testInput[i].IntField != castedOutput[i].IntField1 {
+		if *testInput[i].IntField != castedOutput[i].IntField1 {
 			t.Errorf("Failed Casting Array to Struct Int Field")
 		}
 
