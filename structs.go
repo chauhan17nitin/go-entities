@@ -13,7 +13,10 @@ func castStructs(field, value *reflect.Value) {
 	outputType := field.Type()
 
 	for i := 0; i < field.NumField(); i++ {
+		defer fieldFuncCasting(field, i)
 		innerField := field.Field(i)
+		// in future we can add multiple key support here
+		// comma separated multiple fields whichever we found first in the other struct use that
 		key := strings.Split(outputType.Field(i).Tag.Get("entity"), ",")[0]
 		if key == "" {
 			continue
@@ -27,6 +30,33 @@ func castStructs(field, value *reflect.Value) {
 
 		castField(&innerField, &innerValue)
 	}
+}
+
+func fieldFuncCasting(structField *reflect.Value, index int) {
+	innerField := structField.Field(index)
+	if !innerField.IsValid() {
+		return
+	}
+
+	outputType := structField.Type()
+
+	methodName := strings.Split(outputType.Field(index).Tag.Get("method"), ",")[0]
+	if methodName == "" {
+		return
+	}
+
+	method := structField.MethodByName(methodName)
+	if !method.IsValid() {
+		// method not present invalid method
+		return
+	}
+
+	methodOutput := method.Call([]reflect.Value{})
+	if len(methodOutput) == 0 {
+		return
+	}
+
+	innerField.Set(methodOutput[0])
 }
 
 func castSliceofStructs(field, value *reflect.Value) interface{} {
