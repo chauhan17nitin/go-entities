@@ -42,5 +42,10 @@ func castField(field, value *reflect.Value) {
 		return
 	}
 
+	if field.Type().Kind() == reflect.Ptr {
+		// seriously we need to do something else
+		return
+	}
+
 	field.Set(*value)
 }

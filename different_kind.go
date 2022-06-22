@@ -26,6 +26,17 @@ var allowedUints = map[reflect.Kind]struct{}{
 }
 
 func castDifferentKind(field, value *reflect.Value) {
+
+	if field.Type().Kind() == reflect.Ptr {
+		pointerFieldCasting(field, value)
+		return
+	}
+
+	if value.Type().Kind() == reflect.Ptr {
+		pointerValueCasting(field, value)
+		return
+	}
+
 	if field.Type().Kind() == value.Type().Kind() {
 		castField(field, value)
 		return
@@ -53,6 +64,23 @@ func castDifferentKind(field, value *reflect.Value) {
 
 	// here i think we can panic because the person is
 	// trying to cast very different kind of fields all together
+}
+
+func pointerFieldCasting(field, value *reflect.Value) {
+
+}
+
+func pointerValueCasting(field, value *reflect.Value) {
+	if field.Type().Kind() == reflect.Ptr {
+		pointerBothCasting(field, value)
+	}
+
+	derefValue := value.Elem()
+	castField(field, &derefValue)
+}
+
+func pointerBothCasting(field, value *reflect.Value) {
+
 }
 
 func intCasting(field, value *reflect.Value) {
