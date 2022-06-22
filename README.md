@@ -24,11 +24,58 @@ Now you don't want to expose the Id field to the frontend, then you can just pre
 response := Book{
     Id: 1,
     Title: "Hooked",
-    Author: "Nir Eyal"
+    Author: "Nir Eyal",
 }
 
 // Now you can present the response using go-entities like below
 c.Json(http.StatusOk, goentities.Present(response, BookEntity{}))
 ```
 
-Book you are done, it will only output the exported fields from Book struct and will fill the BookEntity struct using that and return the data accordingly.
+Boom you are done, it will only output the exported fields from Book struct and will fill the BookEntity struct using that and return the data accordingly.
+
+## Limitations
+Currently we support pointers in input struct only not in entity struct.
+
+Like Below example is invalid
+
+```go
+type Book struct {
+    Id int64
+    Title string
+    Author string
+}
+
+type BookEntity struct {
+    BookTitle *string `entity:"Title"`
+    AuthorOfBook *string `entity:"Author"`
+```
+
+But something like these will work 
+
+```go
+type Book struct {
+    Id int64
+    Title *string
+    Author *string
+}
+
+type BookEntity struct {
+    BookTitle *string `entity:"Title"`
+    AuthorOfBook *string `entity:"Author"`
+```
+
+```go
+bookTitle := "Hooked"
+bookAuthor := "Nir Eyal"
+response := Book{
+    Id: 1,
+    Title: &bookTitle,
+    Author: &bookAuthor,
+}
+
+// this will work
+c.Json(http.StatusOk, goentities.Present(response, BookEntity{}))
+
+// this will also work
+c.Json(http.StatusOk, goentities.Present(&response, BookEntity{}))
+```
