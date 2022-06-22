@@ -13,6 +13,12 @@ func Present(input interface{}, output interface{}) interface{} {
 		if inputValue.Type().Kind() == reflect.Slice && dummyOutput.Kind() == reflect.Struct {
 			return castSliceofStructs(&dummyOutput, &inputValue)
 		}
+
+		if inputValue.Type().Kind() == reflect.Ptr && dummyOutput.Kind() == reflect.Struct {
+			pointerValueCasting(&dummyOutput, &inputValue)
+			return dummyOutput.Interface()
+		}
+
 		panic("invalid input and output formats")
 	}
 

@@ -106,6 +106,64 @@ func Test_PresentPointer(t *testing.T) {
 	}
 }
 
+func Test_PresentPointerStruct(t *testing.T) {
+	type input struct {
+		IntField    int
+		FloatField  *float32
+		StringField *string
+		UintField   *uint
+		IntSlices   *[]int
+	}
+
+	type output struct {
+		IntField    int32   `entity:"IntField"`
+		FloatField  float64 `entity:"FloatField"`
+		StringField string  `entity:"StringField"`
+		UintField   uint64  `entity:"UintField"`
+		IntSlices   []int64
+	}
+
+	floatValue := float32(5.5)
+	stringValue := "this is a test string"
+	uintField := uint(5)
+	inputSlices := []int{2, 3, 4, 5}
+
+	testInput := input{
+		IntField:    -5,
+		FloatField:  &floatValue,
+		StringField: &stringValue,
+		UintField:   &uintField,
+		IntSlices:   &inputSlices,
+	}
+
+	testOutput := output{}
+
+	outputValue := Present(&testInput, testOutput)
+	castedOutput := outputValue.(output)
+
+	if castedOutput.IntField != int32(testInput.IntField) {
+		t.Errorf("Failed in casting int field")
+	}
+
+	if castedOutput.FloatField != float64(*testInput.FloatField) {
+		t.Errorf("Failed in Float casting")
+	}
+
+	if castedOutput.StringField != *testInput.StringField {
+		t.Errorf("Failed in String casting")
+	}
+
+	if castedOutput.UintField != uint64(*testInput.UintField) {
+		t.Errorf("Failed in UInt casting")
+	}
+
+	for i := 0; i < len(castedOutput.IntSlices); i++ {
+		if castedOutput.IntSlices[i] != int64((*testInput.IntSlices)[i]) {
+			t.Errorf("failed in int slice casting")
+		}
+	}
+}
+
 func Test_PresentStructNesting(t *testing.T) {
 	type inputNesting struct {
 		IntField    int
