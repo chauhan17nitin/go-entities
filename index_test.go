@@ -1,6 +1,7 @@
 package goentities
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -202,6 +203,27 @@ func Test_PresentStructNesting(t *testing.T) {
 	if castedOutput.NestingField.StringField != testInput.NestingField.StringField {
 		t.Errorf("Failed Casting Nested Struct String Field")
 	}
+}
+
+func Test_PresentMapsInStruct(t *testing.T) {
+	type input struct {
+		MapField map[int32]int
+	}
+
+	type output struct {
+		MapField map[int]int `entity:"MapField"`
+	}
+
+	testInput := input{
+		MapField: map[int32]int{
+			2: 2,
+			3: 3,
+		},
+	}
+
+	testOutput := output{}
+	outputValue := Present(testInput, testOutput)
+	fmt.Println(outputValue)
 }
 
 func Test_PresentSliceofStructs(t *testing.T) {
