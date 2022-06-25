@@ -224,8 +224,8 @@ func Test_PresentMapsInStruct(t *testing.T) {
 	outputValue := Present(testInput, testOutput)
 	castedOutput := outputValue.(output)
 
-	for key, _ := range testInput.MapField {
-		if testInput.MapField[key] != castedOutput.MapField[int(key)] {
+	for key, value := range testInput.MapField {
+		if value != castedOutput.MapField[int(key)] {
 			t.Errorf("error while casting map fields")
 		}
 	}
