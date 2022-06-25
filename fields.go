@@ -33,7 +33,7 @@ func castField(field, value *reflect.Value) {
 	}
 
 	if field.Type().Kind() == reflect.Map {
-		// we need to find some other way for map
+		castMap(field, value)
 		return
 	}
 

@@ -204,6 +204,33 @@ func Test_PresentStructNesting(t *testing.T) {
 	}
 }
 
+func Test_PresentMapsInStruct(t *testing.T) {
+	type input struct {
+		MapField map[int32]int
+	}
+
+	type output struct {
+		MapField map[int]int `entity:"MapField"`
+	}
+
+	testInput := input{
+		MapField: map[int32]int{
+			2: 2,
+			3: 3,
+		},
+	}
+
+	testOutput := output{}
+	outputValue := Present(testInput, testOutput)
+	castedOutput := outputValue.(output)
+
+	for key, value := range testInput.MapField {
+		if value != castedOutput.MapField[int(key)] {
+			t.Errorf("error while casting map fields")
+		}
+	}
+}
+
 func Test_PresentSliceofStructs(t *testing.T) {
 	type input struct {
 		IntField    *int
