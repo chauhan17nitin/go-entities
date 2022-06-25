@@ -1,11 +1,14 @@
 package goentities
 
 import (
-	"fmt"
 	"reflect"
 )
 
 func castMap(field, value *reflect.Value) {
+	if value.Type().Kind() != reflect.Map {
+		panic("can not cast non map field to map")
+	}
+
 	if value.Len() == 0 {
 		// no benefit in casting 0 length map
 		return
@@ -15,43 +18,17 @@ func castMap(field, value *reflect.Value) {
 		field.Set(*value)
 	}
 
-	// fmt.Println(field.MapKeys())
-	fmt.Println(field.Type().Key().Kind())
-	fmt.Println(value.Type().Elem().Kind())
+	fieldKey := reflect.New(field.Type().Key()).Elem()
+	fieldKeyValue := reflect.New(field.Type().Elem()).Elem()
 
-	if _, ok := allowedInts[field.Type().Key().Kind()]; ok {
-		castIntKeyMap(field, value)
-		return
+	dummyMap := reflect.MakeMap(field.Type())
+
+	for _, key := range value.MapKeys() {
+		keyVal := value.MapIndex(key)
+		castField(&fieldKeyValue, &keyVal)
+		castField(&fieldKey, &key)
+		dummyMap.SetMapIndex(fieldKey, fieldKeyValue)
 	}
 
-	// reflect.MakeMap()
-	// elem := value.Index(0)
-	// fmt.Println(value.MapKeys())
-	// for _, key := range value.MapKeys() {
-	// 	keyVal := value.MapIndex(key)
-	// 	fmt.Println(keyVal)
-	// }
-
-}
-
-func castIntKeyMap(field, value *reflect.Value) {
-	if _, ok := allowedInts[field.Type().Key().Kind()]; !ok {
-		panic("can no cast non int type map to int")
-	}
-
-	if _, ok := allowedInts[value.Type().Key().Kind()]; !ok {
-		panic("can no cast non int type map to int")
-	}
-
-	fmt.Println("came here")
-
-	return
-}
-
-func castFloatKeyMap(field, value *reflect.Value) {
-
-}
-
-func castStringKeyMap(field, value *reflect.Value) {
-
+	field.Set(dummyMap)
 }
