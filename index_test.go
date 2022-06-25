@@ -1,7 +1,6 @@
 package goentities
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -223,7 +222,13 @@ func Test_PresentMapsInStruct(t *testing.T) {
 
 	testOutput := output{}
 	outputValue := Present(testInput, testOutput)
-	fmt.Println(outputValue)
+	castedOutput := outputValue.(output)
+
+	for key, _ := range testInput.MapField {
+		if testInput.MapField[key] != castedOutput.MapField[int(key)] {
+			t.Errorf("error while casting map fields")
+		}
+	}
 }
 
 func Test_PresentSliceofStructs(t *testing.T) {
