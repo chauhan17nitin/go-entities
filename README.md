@@ -108,8 +108,8 @@ type Book struct {
 }
 
 type BookEntity struct {
-    BookTitle *string `entity:"Title"`
-    AuthorOfBook *string `entity:"Author"`
+    BookTitle string `entity:"Title"`
+    AuthorOfBook string `entity:"Author"`
 }
 ```
 
