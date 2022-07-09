@@ -1,5 +1,8 @@
 # go-entities
 
+![Version](https://img.shields.io/github/v/tag/chauhan17nitin/go-entities)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/chauhan17nitin/go-entities)](https://pkg.go.dev/github.com/chauhan17nitin/go-entities)
+
 go-entities is a support to api responses structs. It sits on the the top of model structs to prevent exposing unwanted fields in api response.
 
 ## Examples
