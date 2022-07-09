@@ -2,6 +2,8 @@ package goentities
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_PresentSimple(t *testing.T) {
@@ -19,32 +21,56 @@ func Test_PresentSimple(t *testing.T) {
 		UintField   uint64  `entity:"UintField"`
 	}
 
-	testInput := input{
-		IntField:    -5,
-		FloatField:  5.5,
-		StringField: "this is a test string",
-		UintField:   5,
+	tests := []struct {
+		name  string
+		input input
+		want  output
+		equal bool
+	}{
+		{
+			name: "test 1",
+			input: input{
+				IntField:    5,
+				FloatField:  2.0,
+				StringField: "this is my string",
+				UintField:   10,
+			},
+			want: output{
+				IntField:    5,
+				FloatField:  2.0,
+				StringField: "this is my string",
+				UintField:   10,
+			},
+			equal: true,
+		},
+		{
+			name: "test 2 precision losing",
+			input: input{
+				IntField:    5,
+				FloatField:  1.4,
+				StringField: "this is my string",
+				UintField:   10,
+			},
+			want: output{
+				IntField:    5,
+				FloatField:  1.4,
+				StringField: "this is my string",
+				UintField:   10,
+			},
+			equal: false,
+		},
 	}
 
-	testOutput := output{}
-
-	outputValue := Present(testInput, testOutput)
-	castedOutput := outputValue.(output)
-
-	if castedOutput.IntField != int32(testInput.IntField) {
-		t.Errorf("Failed in casting int field")
-	}
-
-	if castedOutput.FloatField != float64(testInput.FloatField) {
-		t.Errorf("Failed in Float casting")
-	}
-
-	if castedOutput.StringField != testInput.StringField {
-		t.Errorf("Failed in String casting")
-	}
-
-	if castedOutput.UintField != uint64(testInput.UintField) {
-		t.Errorf("Failed in UInt casting")
+	t.Parallel()
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Present(tt.input, output{}).(output)
+			if tt.equal {
+				assert.Equal(t, tt.want, got)
+			} else {
+				assert.NotEqual(t, tt.want, got)
+			}
+		})
 	}
 }
 
@@ -62,7 +88,7 @@ func Test_PresentPointer(t *testing.T) {
 		FloatField  float64 `entity:"FloatField"`
 		StringField string  `entity:"StringField"`
 		UintField   uint64  `entity:"UintField"`
-		IntSlices   []int64
+		IntSlices   []int64 `entity:"IntSlices"`
 	}
 
 	floatValue := float32(5.5)
@@ -70,39 +96,42 @@ func Test_PresentPointer(t *testing.T) {
 	uintField := uint(5)
 	inputSlices := []int{2, 3, 4, 5}
 
-	testInput := input{
-		IntField:    -5,
-		FloatField:  &floatValue,
-		StringField: &stringValue,
-		UintField:   &uintField,
-		IntSlices:   &inputSlices,
+	tests := []struct {
+		name  string
+		input input
+		want  output
+		equal bool
+	}{
+		{
+			name: "test 1",
+			input: input{
+				IntField:    5,
+				FloatField:  &floatValue,
+				StringField: &stringValue,
+				UintField:   &uintField,
+				IntSlices:   &inputSlices,
+			},
+			want: output{
+				IntField:    5,
+				FloatField:  5.5,
+				StringField: "this is a test string",
+				UintField:   5,
+				IntSlices:   []int64{2, 3, 4, 5},
+			},
+			equal: true,
+		},
 	}
 
-	testOutput := output{}
-
-	outputValue := Present(testInput, testOutput)
-	castedOutput := outputValue.(output)
-
-	if castedOutput.IntField != int32(testInput.IntField) {
-		t.Errorf("Failed in casting int field")
-	}
-
-	if castedOutput.FloatField != float64(*testInput.FloatField) {
-		t.Errorf("Failed in Float casting")
-	}
-
-	if castedOutput.StringField != *testInput.StringField {
-		t.Errorf("Failed in String casting")
-	}
-
-	if castedOutput.UintField != uint64(*testInput.UintField) {
-		t.Errorf("Failed in UInt casting")
-	}
-
-	for i := 0; i < len(castedOutput.IntSlices); i++ {
-		if castedOutput.IntSlices[i] != int64((*testInput.IntSlices)[i]) {
-			t.Errorf("failed in int slice casting")
-		}
+	t.Parallel()
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Present(tt.input, output{}).(output)
+			if tt.equal {
+				assert.Equal(t, tt.want, got)
+			} else {
+				assert.NotEqual(t, tt.want, got)
+			}
+		})
 	}
 }
 
@@ -120,7 +149,7 @@ func Test_PresentPointerStruct(t *testing.T) {
 		FloatField  float64 `entity:"FloatField"`
 		StringField string  `entity:"StringField"`
 		UintField   uint64  `entity:"UintField"`
-		IntSlices   []int64
+		IntSlices   []int64 `entity:"IntSlices"`
 	}
 
 	floatValue := float32(5.5)
