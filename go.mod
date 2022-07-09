@@ -1,4 +1,4 @@
-module go-entities
+module github.com/chauhan17nitin/go-entities
 
 go 1.17
 
