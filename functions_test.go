@@ -2,6 +2,8 @@ package goentities
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type input struct {
@@ -22,20 +24,54 @@ func (i output) FuncFieldOne() int {
 }
 
 func Test_FunctionFields(t *testing.T) {
-	testInput := input{
-		IntField: -5,
+
+	tests := []struct {
+		name       string
+		input      input
+		outputType output
+		want       output
+	}{
+		{
+			name: "test 1",
+			input: input{
+				IntField: -5,
+			},
+			outputType: output{},
+			want: output{
+				IntField:   -5,
+				FuncField1: -50,
+			},
+		},
+		{
+			name: "test 2",
+			input: input{
+				IntField: 0,
+			},
+			outputType: output{},
+			want: output{
+				IntField:   0,
+				FuncField1: 0,
+			},
+		},
+		{
+			name: "test 3",
+			input: input{
+				IntField: 11,
+			},
+			outputType: output{},
+			want: output{
+				IntField:   11,
+				FuncField1: 110,
+			},
+		},
 	}
 
-	testOutput := output{}
+	t.Parallel()
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Present(tt.input, tt.outputType).(output)
 
-	outputValue := Present(testInput, testOutput)
-	castedOutput := outputValue.(output)
-
-	if castedOutput.IntField != int32(testInput.IntField) {
-		t.Errorf("Failed in int casting")
-	}
-
-	if castedOutput.FuncField1 != 10*testInput.IntField {
-		t.Errorf("Failed in method casting")
+			assert.Equal(t, tt.want, got, "ouput does not matches")
+		})
 	}
 }
