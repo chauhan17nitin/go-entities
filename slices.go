@@ -67,7 +67,7 @@ func castSlices(field, value *reflect.Value) {
 	}
 
 	if _, ok := allowedInts[sliceType]; ok {
-		CastIntSlices(&x, value)
+		castIntSlices(&x, value)
 	}
 
 	if _, ok := allowedUints[sliceType]; ok {
@@ -83,7 +83,7 @@ func castSlices(field, value *reflect.Value) {
 	}
 
 	if sliceType == reflect.Interface {
-		CastInterfaceSlice(&x, value)
+		castInterfaceSlice(&x, value)
 	}
 
 	if !same {
@@ -91,7 +91,7 @@ func castSlices(field, value *reflect.Value) {
 	}
 }
 
-func CastInterfaceSlice(field, value *reflect.Value) {
+func castInterfaceSlice(field, value *reflect.Value) {
 	basicSliceValidations(field, value)
 
 	if field.Index(0).Type().Kind() != reflect.Interface {
@@ -105,7 +105,7 @@ func CastInterfaceSlice(field, value *reflect.Value) {
 	}
 }
 
-func CastIntSlices(field, value *reflect.Value) {
+func castIntSlices(field, value *reflect.Value) {
 	basicSliceValidations(field, value)
 
 	if _, ok := allowedInts[field.Index(0).Type().Kind()]; !ok {
