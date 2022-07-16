@@ -27,7 +27,7 @@ type User struct {
 ## Using go-entities
 As Entites are meant to be reusable so they should be present in a specific folder so that different controllers can use them.
 
-.
+
 
     ├── entities                   # Entities (represents response types)
     ├── controllers                # controllers for api's
