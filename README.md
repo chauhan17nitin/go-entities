@@ -150,7 +150,7 @@ type User struct {
     Address Address
 }
 
-type struct Address {
+type Address struct {
     City  string
     State string
     Pin   int
